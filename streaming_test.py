@@ -12,10 +12,10 @@ import json
 
 def display(rdd):
 
-    sent = rdd.collect()
+    sent = rdd.collect() #retrieves the elements in rdd
     if len(sent) > 0:
-        df = spark.createDataFrame(json.loads(sent[0]).values() , schema = ["sentiment" , "tweet"])
-        df.show(truncate=False)
+        df = spark.createDataFrame(json.loads(sent[0]).values() , schema = ["sentiment" , "tweet"]) #creates the dataframe
+        df.show(truncate=False) #displays the dataframe
 	
 
 
@@ -24,9 +24,12 @@ if __name__ == "__main__":
     spark = SparkSession.builder.getOrCreate()
     ssc = StreamingContext(sc, 5)
     sql_context=SQLContext(sc)
+	
+    #takes in the input from the stream 
     tweets = ssc.socketTextStream("localhost" , 6100)   
-
+    #splits up the input on newline char
     words = tweets.flatMap(lambda line : line.lower().split('\n'))
+    #Apply a function (display) to each RDD in this DStream.
     words.foreachRDD(display)
 
 
