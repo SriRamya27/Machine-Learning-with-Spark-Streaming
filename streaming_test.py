@@ -7,7 +7,7 @@ from pyspark.streaming import StreamingContext
 from pyspark.sql import SQLContext
 from pyspark.sql import SparkSession
 from pyspark.sql import Row
-from pyspark.ml.feature import RegexTokenizer
+from pyspark.ml.feature import RegexTokenizer , StopWordsRemover
 import pyspark.sql.types as tp
 from pyspark.ml.feature import HashingTF, IDF, Tokenizer, CountVectorizer
 from pyspark.ml.feature import StringIndexer
@@ -23,12 +23,14 @@ import re
 import json
 
 #removing all useless words and punctuations from the tokenised tweets 
-add_stopwords = ["http" , "https" , "amp" , "rt" , "t" , "c" , "the" , "@" , "," , "-" , "com" , "an" , "of" , "for" , "ing" , "ed" , "tion"] #you can add any words to this list if you want it to be filtered out from the tweets
+add_stopwords = ["http" , "https" , "amp" , "rt" , "t" , "c" , "the" , "@" , "," , \
+                "-" , "com" , "an" , "of" , "for" , "ing" , "ed" , "tion" , "&" , "quot"] #you can add any words to this list if you want it to be filtered out from the tweets
 alphabet_list = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',  'm',\
                 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A'\
                 , 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',\
                 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
+add_stopwords = add_stopwords + alphabet_list
 """
 def remove_url(line):
     # if len(line) != 0:
@@ -56,10 +58,12 @@ def display(rdd):
         try:
             df = spark.createDataFrame(json.loads(sent[0]).values() , schema = ["Sentiment" , "Tweet"])
             tokenizer = RegexTokenizer(inputCol="Tweet", outputCol="SentimentWords" ,  pattern= '\\W')
-            hashtf = HashingTF(numFeatures=2**16 , inputCol="SentimentWords" , outputCol="tf")
+            stopwordsRemover = StopWordsRemover(inputCol="SentimentWords", outputCol="filtered" ).setStopWords(add_stopwords)
+            # stopwordsRemover2 = StopWordsRemover(inputCol="filtered", outputCol="double_filtered" ).setStopWords(add_stopwords)
+            hashtf = HashingTF(numFeatures=2**16 , inputCol="filtered" , outputCol="tf")
             idf = IDF(inputCol="tf" , outputCol="features" , minDocFreq= 5)
             label_stringIdx = StringIndexer(inputCol="Sentiment" , outputCol="label") #by default, 0 (from dataset) is mapped to 1, and 4 to 0
-            pipeline = Pipeline(stages=[tokenizer , hashtf , idf , label_stringIdx])
+            pipeline = Pipeline(stages=[tokenizer , stopwordsRemover , hashtf , idf , label_stringIdx])
             pipelineFit = pipeline.fit(df)
             train_df = pipelineFit.transform(df)
             train_df.show(truncate=False , n = 5)
