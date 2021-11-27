@@ -18,36 +18,22 @@ from pyspark.ml.evaluation import BinaryClassificationEvaluator
 from pyspark.ml.feature import HashingTF, IDF, Tokenizer
 from pyspark.ml.feature import StringIndexer
 from pyspark.ml import Pipeline
+from pyspark.sql.functions import * 
 
 import re
 import json
 
 #removing all useless words and punctuations from the tokenised tweets 
-add_stopwords = ["http" , "https" , "amp" , "rt" , "t" , "c" , "the" , "@" , "," , \
-                "-" , "com" , "an" , "of" , "for" , "ing" , "ed" , "tion" , "&" , "quot"] #you can add any words to this list if you want it to be filtered out from the tweets
+add_stopwords = ["rt" , "the" , "an" , "of" , "for" , "that" , "is" , "was" \
+                 , "will", "has" , "have" , "had" , "and", "with" ,
+                 "can", "it" , "so" , "am" , "be" ,"to", "wasn" , "," , "-", "." ] #you can add any words to this list if you want it to be filtered out from the tweets
 alphabet_list = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',  'm',\
                 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A'\
                 , 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',\
                 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
 add_stopwords = add_stopwords + alphabet_list
-"""
-def remove_url(line):
-    # if len(line) != 0:
-    #     for i in line:
-    #         try:
-    #             words = i[2].split(' ')
-    #             print(words)
-    #         except:
-    #             print("")
-    #             pass
-    # line = re.sub(r"http\S+" , "" , line)
-    # line = re.sub('  +', '' , line)
-    # line = re.sub('\n+', '' , line)
-    # line = line.split('\n')
-    print(line)
-    return line
-"""
+
 
 def display(rdd):
 
@@ -57,6 +43,8 @@ def display(rdd):
     if len(sent) > 0:
         try:
             df = spark.createDataFrame(json.loads(sent[0]).values() , schema = ["Sentiment" , "Tweet"])
+            df = df.withColumn("Tweet" , regexp_replace("Tweet" , r"http\S+", ""))
+            df = df.withColumn("Tweet" , regexp_replace("Tweet" , r"@\S+", ""))
             tokenizer = RegexTokenizer(inputCol="Tweet", outputCol="SentimentWords" ,  pattern= '\\W')
             stopwordsRemover = StopWordsRemover(inputCol="SentimentWords", outputCol="filtered" ).setStopWords(add_stopwords)
             # stopwordsRemover2 = StopWordsRemover(inputCol="filtered", outputCol="double_filtered" ).setStopWords(add_stopwords)
