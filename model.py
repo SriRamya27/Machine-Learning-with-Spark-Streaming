@@ -2,7 +2,7 @@ import pickle
 from sklearn.naive_bayes import BernoulliNB
 from sklearn.linear_model import Perceptron
 from sklearn.linear_model import SGDClassifier
-from sklearn.cluster import KMeans
+from sklearn.cluster import MiniBatchKMeans, KMeans
 
 nb_model = BernoulliNB()
 # save the model to disk
@@ -25,10 +25,11 @@ with open(filename, 'wb') as f:
     pickle.dump(sgd_model, f)
 
 
-kmeans_cluster = KMeans(n_clusters=2)
-# save the cluster to disk
+#from sklearn.cluster import MiniBatchKMeans
+kmeans = MiniBatchKMeans(n_clusters=2)
+
 filename = 'kmeans_finalized_cluster.sav'
 with open(filename, 'wb') as f:
-    pickle.dump(kmeans_cluster, f)
+    pickle.dump(kmeans, f)
 
 
