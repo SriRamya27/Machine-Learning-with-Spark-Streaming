@@ -27,6 +27,7 @@ $SPARK_HOME/bin/spark-submit stream_preprocess.py > output.txt
 #which will collect data from stream.py through tcp connection converts it to rdd and does preprocess on data and call models from classification file. 
 ---
 ##TESTING 
+---
 5.**step5**.comment line number *143* in  stream.py
 ---
 
