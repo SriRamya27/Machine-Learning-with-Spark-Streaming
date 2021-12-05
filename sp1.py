@@ -13,25 +13,16 @@ import pyspark
 from pyspark.streaming import StreamingContext
 from pyspark.sql import SQLContext
 from pyspark.sql import SparkSession
-from pyspark.sql import Row
 from pyspark.ml.feature import RegexTokenizer , StopWordsRemover
 import pyspark.sql.types as tp
 from pyspark.ml.feature import HashingTF, IDF, Tokenizer, CountVectorizer
 from pyspark.ml.feature import StringIndexer
-from pyspark.ml import Pipeline, pipeline
 from pyspark.ml.classification import LogisticRegression
 from pyspark.ml.evaluation import BinaryClassificationEvaluator
-
-from pyspark.ml.feature import HashingTF, IDF, Tokenizer
 from sklearn.feature_extraction.text import HashingVectorizer
-from pyspark.ml import Pipeline
-
 import re
 import json
-
-#from pyspark.ml.feature import VectorAssembler
-from pyspark.mllib.linalg.distributed import RowMatrix
-from pyspark.ml.functions import vector_to_array
+import testing
 
 #removing all useless words and punctuations from the tokenised tweets 
 add_stopwords = ["http" , "https" , "amp" , "rt" , "t" , "c" , "the" , "@" , "," , \
@@ -65,11 +56,11 @@ def display(rdd):
             y=np.array([i[0] for i in np.array(y)])
             #print(y)
 
-            classification.naiveBayes(x,y)
-            classification.perceptron(x,y)
-            classification.sdg(x,y)
-            classification.kmeans(x,y)
-            classification.save()
+            testing.testNaiveBayes(x,y)
+            testing.testPerceptron(x,y)
+            testing.testSdg(x,y)
+            testing.testKmeans(x,y)
+            
         except Exception as e:
         	print(e)
         	pass
@@ -85,7 +76,6 @@ if __name__ == "__main__":
     words = tweets.flatMap(lambda line : line.split('\n'))
     # words = tweets.flatMap(lambda line : re.sub(r"http\S+" , "" , line).split('\n'))
     words.foreachRDD(display)
-    
 
 
     ssc.start()
