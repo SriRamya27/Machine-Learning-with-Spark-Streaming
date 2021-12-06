@@ -1,28 +1,16 @@
-#run this code using $SPARK_HOME/bin/spark-submit streaming_test.py. 
+#run this code using $SPARK_HOME/bin/spark-submit sp1.py. 
 # for some weird reason the streaming doesn't work properly using python3, so this will do.
 
 import numpy as np
-import classification
-#from sklearn.naive_bayes import BernoulliNB
-#from sklearn.linear_model import Perceptron
-#from sklearn.linear_model import SGDClassifier
-#from sklearn.cluster import KMeans
-
+import testing
 from pyspark import SparkContext
 import pyspark
 from pyspark.streaming import StreamingContext
 from pyspark.sql import SQLContext
 from pyspark.sql import SparkSession
-from pyspark.ml.feature import RegexTokenizer , StopWordsRemover
-import pyspark.sql.types as tp
-from pyspark.ml.feature import HashingTF, IDF, Tokenizer, CountVectorizer
 from pyspark.ml.feature import StringIndexer
-from pyspark.ml.classification import LogisticRegression
-from pyspark.ml.evaluation import BinaryClassificationEvaluator
 from sklearn.feature_extraction.text import HashingVectorizer
-import re
 import json
-import testing
 
 #removing all useless words and punctuations from the tokenised tweets 
 add_stopwords = ["http" , "https" , "amp" , "rt" , "t" , "c" , "the" , "@" , "," , \
@@ -41,25 +29,24 @@ def display(rdd):
     if len(sent) > 0:
         try:
             df = spark.createDataFrame(json.loads(sent[0]).values() , schema = ["Sentiment" , "Tweet"])
-            tokenizer = RegexTokenizer(inputCol="Tweet", outputCol="SentimentWords" ,  pattern= '\\W')
-            stopwordsRemover = StopWordsRemover(inputCol="SentimentWords", outputCol="filtered" ).setStopWords(add_stopwords)
+            
  
             x=df.select('Tweet').collect()
             x=[i['Tweet'] for i in x]
+            #applying hashing vectorizer on tweets column with stopwords
             vectorizer = HashingVectorizer(n_features=100000,stop_words=add_stopwords)
             x = vectorizer.fit_transform(x)
-            #print(x)
+            #in sentiment we changed labe 0 to 0 and label 4 to 1 using StringIndexer
             label_stringIdx = StringIndexer(inputCol="Sentiment" , outputCol="label")
             lix = label_stringIdx.fit(df.select("Sentiment"))
             lx = lix.transform(df.select("Sentiment"))
             y=lx.select('label').collect()
             y=np.array([i[0] for i in np.array(y)])
-            #print(y)
-
-            #testing.testNaiveBayes(x,y)
-            #testing.testPerceptron(x,y)
-            #testing.testSdg(x,y)
-            #testing.testKmeans(x,y)
+            #calling all models
+            testing.testNaiveBayes(x,y)
+            testing.testPerceptron(x,y)
+            testing.testSdg(x,y)
+            testing.testKmeans(x,y)
             
         except Exception as e:
         	print(e)

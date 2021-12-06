@@ -2,36 +2,18 @@
 # for some weird reason the streaming doesn't work properly using python3, so this will do.
 
 import numpy as np
+#this module has all models we are working on
 import classification
-#from sklearn.naive_bayes import BernoulliNB
-#from sklearn.linear_model import Perceptron
-#from sklearn.linear_model import SGDClassifier
-#from sklearn.cluster import KMeans
 
 from pyspark import SparkContext
 import pyspark
 from pyspark.streaming import StreamingContext
 from pyspark.sql import SQLContext
 from pyspark.sql import SparkSession
-from pyspark.sql import Row
-from pyspark.ml.feature import RegexTokenizer , StopWordsRemover
-import pyspark.sql.types as tp
-from pyspark.ml.feature import HashingTF, IDF, Tokenizer, CountVectorizer
 from pyspark.ml.feature import StringIndexer
-from pyspark.ml import Pipeline, pipeline
-from pyspark.ml.classification import LogisticRegression
-from pyspark.ml.evaluation import BinaryClassificationEvaluator
-
-from pyspark.ml.feature import HashingTF, IDF, Tokenizer
 from sklearn.feature_extraction.text import HashingVectorizer
-from pyspark.ml import Pipeline
-
-import re
 import json
 
-#from pyspark.ml.feature import VectorAssembler
-from pyspark.mllib.linalg.distributed import RowMatrix
-from pyspark.ml.functions import vector_to_array
 
 #removing all useless words and punctuations from the tokenised tweets 
 add_stopwords = ["http" , "https" , "amp" , "rt" , "t" , "c" , "the" , "@" , "," , \
@@ -43,7 +25,6 @@ alphabet_list = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',  'm
 
 add_stopwords = add_stopwords + alphabet_list
 
-#classification.load()  
 
 def display(rdd):
 
@@ -51,33 +32,31 @@ def display(rdd):
     if len(sent) > 0:
         try:
             df = spark.createDataFrame(json.loads(sent[0]).values() , schema = ["Sentiment" , "Tweet"])
-            tokenizer = RegexTokenizer(inputCol="Tweet", outputCol="SentimentWords" ,  pattern= '\\W')
-            stopwordsRemover = StopWordsRemover(inputCol="SentimentWords", outputCol="filtered" ).setStopWords(add_stopwords)
+            
  
             x=df.select('Tweet').collect()
+            #tokenizing 
             x=[i['Tweet'] for i in x]
+            #applying hashing vectorizer on tweets column with stopwords 
             vectorizer = HashingVectorizer(n_features=100000,stop_words=add_stopwords)
             x = vectorizer.fit_transform(x)
-            #print(x)
+            #in sentiment we changed labe 0 to 0 and label 4 to 1 using StringIndexer
             label_stringIdx = StringIndexer(inputCol="Sentiment" , outputCol="label")
             lix = label_stringIdx.fit(df.select("Sentiment"))
             lx = lix.transform(df.select("Sentiment"))
             y=lx.select('label').collect()
             y=np.array([i[0] for i in np.array(y)])
-            #print(y)
-
-            #classification.naiveBayes(x,y)
-            #classification.perceptron(x,y)
+            #calling all models 
+            classification.naiveBayes(x,y)
+            classification.perceptron(x,y)
             classification.sdg(x,y)
-            #classification.kmeans(x,y)
-            
+            classification.kmeans(x,y)
             classification.save()
-            
             
         except Exception as e:
         	print(e)
         	pass
-    
+        
 
 if __name__ == "__main__":
     sc = SparkContext("local[2]", "PLEASEWORK")
@@ -90,6 +69,8 @@ if __name__ == "__main__":
     # words = tweets.flatMap(lambda line : re.sub(r"http\S+" , "" , line).split('\n'))
     words.foreachRDD(display)
     
+
+
     ssc.start()
     ssc.awaitTermination()
 
