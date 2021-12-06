@@ -1,39 +1,40 @@
 import numpy as np
+absolute_path='/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main'
 
-kmean_accu_train= np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/kmean_accu_train.txt')
-kmean_accu_test= np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/kmeans_accu_test.txt')
-nb_accu_train= np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/nb_train_accuracy.txt')
-nb_accu_test= np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/nb_test_accuracy.txt')
-prep_accu_train= np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/prep_acc_train.txt')
-prep_accu_test= np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/prep_acc_test.txt')
-sgd_accu_train=np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/sgd_train_accuracy.txt')
-sgd_accu_test= np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/sgd_test_accuracy.txt')
+kmean_accu_train= np.loadtxt(absolute_path+'/values/kmean_accu_train.txt')
+kmean_accu_test= np.loadtxt(absolute_path+'/values/kmeans_accu_test.txt')
+nb_accu_train= np.loadtxt(absolute_path+'/values/nb_train_accuracy.txt')
+nb_accu_test= np.loadtxt(absolute_path+'/values/nb_test_accuracy.txt')
+prep_accu_train= np.loadtxt(absolute_path+'/values/prep_acc_train.txt')
+prep_accu_test= np.loadtxt(absolute_path+'/values/prep_acc_test.txt')
+sgd_accu_train=np.loadtxt(absolute_path+'/values/sgd_train_accuracy.txt')
+sgd_accu_test= np.loadtxt(absolute_path+'/values/sgd_test_accuracy.txt')
 
-kmean_rmse_train= np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/kmean_rmse_train.txt')
-kmean_rmse_test= np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/kmeans_rmse_test.txt')
-nb_rmse_train= np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/nb_train_rmse.txt')
-nb_rmse_test= np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/nb_test_rmse.txt')
-sgd_rmse_train= np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/sgd_train_rmse.txt')
-sgd_rmse_test= np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/sgd_test_rmse.txt')
-prep_rmse_train= np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/prep_rmse_train.txt')
-prep_rmse_test= np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/prep_rmse_test.txt')
+kmean_rmse_train= np.loadtxt(absolute_path+'/values/kmean_rmse_train.txt')
+kmean_rmse_test= np.loadtxt(absolute_path+'/values/kmeans_rmse_test.txt')
+nb_rmse_train= np.loadtxt(absolute_path+'/values/nb_train_rmse.txt')
+nb_rmse_test= np.loadtxt(absolute_path+'/values/nb_test_rmse.txt')
+sgd_rmse_train= np.loadtxt(absolute_path+'/values/sgd_train_rmse.txt')
+sgd_rmse_test= np.loadtxt(absolute_path+'/values/sgd_test_rmse.txt')
+prep_rmse_train= np.loadtxt(absolute_path+'/values/prep_rmse_train.txt')
+prep_rmse_test= np.loadtxt(absolute_path+'/values/prep_rmse_test.txt')
 
-kmean_accu_train_hyp= np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/knn_accu_after_hyper.txt')
+kmean_accu_train_hyp= np.loadtxt(absolute_path+'/values/knn_accu_after_hyper.txt')
 
-nb_accu_train_hyp= np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/nb_train_hyperparameter.txt')
+nb_accu_train_hyp= np.loadtxt(absolute_path+'/values/nb_train_hyperparameter.txt')
 
-sgd_accu_train_hyp= np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/sgd_train_hyperparameter.txt')
+sgd_accu_train_hyp= np.loadtxt(absolute_path+'/values/sgd_train_hyperparameter.txt')
 
-prep_accu_train_hyp=np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/prep_accu_after_hyper.txt')
+prep_accu_train_hyp=np.loadtxt(absolute_path+'/values/prep_accu_after_hyper.txt')
 
-nb_1000=np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/nb_train_hyperparameter_1000.txt')
-nb_5000=np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/nb_train_hyperparameter_5000.txt')
-nb_10000=np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/nb_train_hyperparameter.txt')
-nb_50000=np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/nb_train_hyperparameter_50000.txt')
-nb_100000=np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/nb_train_hyperparameter_100000.txt')
-sgd_10000=np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/sgd_train_accuracy.txt')
-sgd_50000=np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/sgd_train_50000.txt')
-sgd_100000=np.loadtxt('/home/pes1ug19cs124/Machine-Learning-with-Spark-Streaming-main/values/sgd_train_100000.txt')
+nb_1000=np.loadtxt(absolute_path+'/values/nb_train_hyperparameter_1000.txt')
+nb_5000=np.loadtxt(absolute_path+'/values/nb_train_hyperparameter_5000.txt')
+nb_10000=np.loadtxt(absolute_path+'/values/nb_train_hyperparameter.txt')
+nb_50000=np.loadtxt(absolute_path+'/values/nb_train_hyperparameter_50000.txt')
+nb_100000=np.loadtxt(absolute_path+'/values/nb_train_hyperparameter_100000.txt')
+sgd_10000=np.loadtxt(absolute_path+'/values/sgd_train_accuracy.txt')
+sgd_50000=np.loadtxt(absolute_path+'/values/sgd_train_50000.txt')
+sgd_100000=np.loadtxt(absolute_path+'/values/sgd_train_100000.txt')
 
 """##KMEAN MINI BATCHES
 
