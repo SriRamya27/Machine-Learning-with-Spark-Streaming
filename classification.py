@@ -49,7 +49,6 @@ def kmeans(x,y):
 	print(accuracy)
 	print(rmse)
 	
-
 #saving all models to disk again to ensure it learns
 def save():
 	pickle.dump(nb_loaded_model, open('nb_finalized_model.sav', 'wb'))
