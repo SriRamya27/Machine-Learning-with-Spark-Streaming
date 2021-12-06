@@ -1,4 +1,5 @@
-#This file clusters 
+#This file contains functions that run partial fit, and calculate accuracy and root mean square error for each of the models. 
+#These are then saved back to the .sav files.
 
 import numpy as np
 import pickle
