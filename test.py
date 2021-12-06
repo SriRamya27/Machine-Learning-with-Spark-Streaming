@@ -1,5 +1,4 @@
-#run this code using $SPARK_HOME/bin/spark-submit sp1.py. 
-# for some weird reason the streaming doesn't work properly using python3, so this will do.
+#
 
 import numpy as np
 import testing
@@ -32,20 +31,21 @@ def display(rdd):
             df = spark.createDataFrame(json.loads(sent[0]).values() , schema = ["Sentiment" , "Tweet"])
             df = df.withColumn("Tweet" , regexp_replace("Tweet" , r"http\S+", ""))
             df = df.withColumn("Tweet" , regexp_replace("Tweet" , r"@\S+", ""))
-            
- 
             x=df.select('Tweet').collect()
             x=[i['Tweet'] for i in x]
-            #applying hashing vectorizer on tweets column with stopwords
-            vectorizer = HashingVectorizer(n_features=100000,stop_words=add_stopwords)
+            
+      #applying hashing vectorizer on tweets column with stopwords
+            vectorizer = HashingVectorizer(n_features=100000, stop_words=add_stopwords)
             x = vectorizer.fit_transform(x)
-            #in sentiment we changed labe 0 to 0 and label 4 to 1 using StringIndexer
+      
+      #in sentiment we changed label 0 to 0 and label 4 to 1 using StringIndexer
             label_stringIdx = StringIndexer(inputCol="Sentiment" , outputCol="label")
             lix = label_stringIdx.fit(df.select("Sentiment"))
             lx = lix.transform(df.select("Sentiment"))
             y=lx.select('label').collect()
             y=np.array([i[0] for i in np.array(y)])
-            #calling all models
+            
+      #call all the testing functions
             testing.testNaiveBayes(x,y)
             testing.testPerceptron(x,y)
             testing.testSdg(x,y)
@@ -62,13 +62,7 @@ if __name__ == "__main__":
     ssc = StreamingContext(sc, 5)
     sql_context=SQLContext(sc)
     tweets = ssc.socketTextStream("localhost" , 6100)   
-
     words = tweets.flatMap(lambda line : line.split('\n'))
-    # words = tweets.flatMap(lambda line : re.sub(r"http\S+" , "" , line).split('\n'))
     words.foreachRDD(display)
-
-
     ssc.start()
     ssc.awaitTermination()
-
-    #you'll have to ctrl+Z or ctrl+C to stop this code from running (it doesn't end automatically after streaming is done)
