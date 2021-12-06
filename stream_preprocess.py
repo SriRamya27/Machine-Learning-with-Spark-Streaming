@@ -11,6 +11,7 @@ from pyspark.streaming import StreamingContext
 from pyspark.sql import SQLContext
 from pyspark.sql import SparkSession
 from pyspark.ml.feature import StringIndexer
+from pyspark.sql.functions import regexp_replace
 from sklearn.feature_extraction.text import HashingVectorizer
 import json
 
@@ -35,6 +36,8 @@ def display(rdd):
             
  
             x=df.select('Tweet').collect()
+            df = df.withColumn("Tweet" , regexp_replace("Tweet" , r"http\S+", ""))
+            df = df.withColumn("Tweet" , regexp_replace("Tweet" , r"@\S+", ""))
             #tokenizing 
             x=[i['Tweet'] for i in x]
             #applying hashing vectorizer on tweets column with stopwords 

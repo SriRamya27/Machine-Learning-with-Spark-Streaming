@@ -10,6 +10,7 @@ from pyspark.sql import SQLContext
 from pyspark.sql import SparkSession
 from pyspark.ml.feature import StringIndexer
 from sklearn.feature_extraction.text import HashingVectorizer
+from pyspark.sql.functions import regexp_replace
 import json
 
 #removing all useless words and punctuations from the tokenised tweets 
@@ -29,6 +30,8 @@ def display(rdd):
     if len(sent) > 0:
         try:
             df = spark.createDataFrame(json.loads(sent[0]).values() , schema = ["Sentiment" , "Tweet"])
+            df = df.withColumn("Tweet" , regexp_replace("Tweet" , r"http\S+", ""))
+            df = df.withColumn("Tweet" , regexp_replace("Tweet" , r"@\S+", ""))
             
  
             x=df.select('Tweet').collect()
