@@ -43,6 +43,7 @@ alphabet_list = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',  'm
 
 add_stopwords = add_stopwords + alphabet_list
 
+#classification.load()  
 
 def display(rdd):
 
@@ -65,15 +66,18 @@ def display(rdd):
             y=np.array([i[0] for i in np.array(y)])
             #print(y)
 
-            classification.naiveBayes(x,y)
-            classification.perceptron(x,y)
+            #classification.naiveBayes(x,y)
+            #classification.perceptron(x,y)
             classification.sdg(x,y)
-            classification.kmeans(x,y)
+            #classification.kmeans(x,y)
+            
             classification.save()
+            
+            
         except Exception as e:
         	print(e)
         	pass
-        
+    
 
 if __name__ == "__main__":
     sc = SparkContext("local[2]", "PLEASEWORK")
@@ -86,8 +90,6 @@ if __name__ == "__main__":
     # words = tweets.flatMap(lambda line : re.sub(r"http\S+" , "" , line).split('\n'))
     words.foreachRDD(display)
     
-
-
     ssc.start()
     ssc.awaitTermination()
 

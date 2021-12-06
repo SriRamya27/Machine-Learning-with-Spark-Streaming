@@ -4,13 +4,13 @@ from sklearn.linear_model import Perceptron
 from sklearn.linear_model import SGDClassifier
 from sklearn.cluster import MiniBatchKMeans, KMeans
 
-nb_model = BernoulliNB()
+nb_model = BernoulliNB(alpha=0.1)
 # save the model to disk
 filename = 'nb_finalized_model.sav'
 with open(filename, 'wb') as f:
     pickle.dump(nb_model, f)
     
-perceptron_model =  Perceptron(alpha=0.1, tol=1e-3, random_state=0)
+perceptron_model =  Perceptron(alpha=0.01, tol=1e-3, random_state=0)
 # save the model to disk
 filename = 'perceptron_finalized_model.sav'
 with open(filename, 'wb') as f:

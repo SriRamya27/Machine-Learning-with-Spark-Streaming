@@ -56,10 +56,10 @@ def display(rdd):
             y=np.array([i[0] for i in np.array(y)])
             #print(y)
 
-            testing.testNaiveBayes(x,y)
-            testing.testPerceptron(x,y)
-            testing.testSdg(x,y)
-            testing.testKmeans(x,y)
+            #testing.testNaiveBayes(x,y)
+            #testing.testPerceptron(x,y)
+            #testing.testSdg(x,y)
+            #testing.testKmeans(x,y)
             
         except Exception as e:
         	print(e)
