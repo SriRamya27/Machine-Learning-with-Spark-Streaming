@@ -45,6 +45,6 @@ which will collect data from stream.py through tcp connection converts it to rdd
 ###PLOTS
 ---
 ```Javascript
-python3 plot_bd.py
+python3 plots_bd.py
 ```
 all experiment data like accuracy,rmse  is stored in folder called values  changes to be made is path to be made is changing the absolute path variable to absolute path to values folder .
