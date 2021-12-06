@@ -1,26 +1,23 @@
 Machine-Learning-with-Spark-Streaming 
 **Dataset** : **Sentiment Analysis**
 ---
-Step 1. Run this command.  
+Step 1. Run this command. It creates the base models while tuning them. These are saved as .sav files.
 ```Javascript
  python3 model.py
 ```
-It creates the base models while tuning them. These are saved as .sav files.
 ---
 Training:
 ---
-Step 2. Run stream.py using this command.
+Step 2. Run stream.py using this command. It streams the .csv file in batches. It takes the name of dataset folder and the batch size as command line arguments. This opens a TCP connection and waits.
+
 ```Javascript
 python3 stream.py -f sentiment -b 10000 
 ```
-This streams the .csv file in batches. It takes the name of dataset folder and the batch size as command line arguments. This opens a TCP connection and waits.
 ---
----
-Step 3. Run stream_preprocess.py in a new terminal using this command. 
+Step 3. Run stream_preprocess.py in a new terminal using this command. This file preprocesses the data being streamed from step 2, converts it into dataframes and RDDs, and puts them through the models defined in classification.py.
 ```Javascript
 $SPARK_HOME/bin/spark-submit stream_preprocess.py > output.txt
 ```
-This file preprocesses the data being streamed from step 2, converts it into dataframes, and puts them through the models defined in classification.py.
 ---
 Testing:
 ---
@@ -30,13 +27,9 @@ Step 5. Run stream.py again using the command
 python3 stream.py -f sentiment -b 10000 
 ```
 ---
-7.**step7**.run sp1.py using command 
+Step 6. Run test.py using command. This file preprocesses the data being streamed from step 5, converts it into dataframes and RDDs, and puts them through the models defined in testing.py. It also displays accuracy, f1 score, and confusion matrix.
+
 ```Javascript
-$SPARK_HOME/bin/spark-submit sp1.py > output_testing.txt
+$SPARK_HOME/bin/spark-submit test.py > output_testing.txt
 ```
----
-which will collect data from stream.py through tcp connection converts it to rdd and does preprocess on data and call models from classification file for prediction and displays accuracy, f1 score,confusion matrix
----
-###PLOTS
-...
 ---
